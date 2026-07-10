@@ -51,14 +51,21 @@ def length_of_longest_substring_ugly(s):
 
 def length_of_longest_substring_set(s):
     # sliding window, shrink from the left when a duplicate enters the window
+    # left edge of the current no-repeat window
     left = 0  # O(1) | O(1)
+    # set of characters currently "in" the window
     window = set()  # O(1) | O(1)
+    # longest window length found so far
     res = 0  # O(1) | O(1)
+    # walk right through s
     for right in range(len(s)):  # O(1) | O(n)
+        # shrink from the left until the duplicate is gone
         while s[right] in window:  # O(1) | O(1)
             window.remove(s[left])  # O(1) | O(1)
             left += 1  # O(1) | O(1)
+        # add the new character to the window
         window.add(s[right])  # O(n) | O(1)
+        # update the best window length seen so far
         res = max(res, right - left + 1)  # O(1) | O(1)
     return res  # O(1) | O(1)
 
@@ -68,14 +75,20 @@ def length_of_longest_substring_set(s):
 ## time: O(n) - single pass, O(1) average dict ops
 
 def length_of_longest_substring(s):
-    # sliding window, jump left directly using each char's last-seen index
+    # left edge of the current no-repeat window
     left = 0  # O(1) | O(1)
+    # dict mapping each char to the index it was last seen at
     last_seen = {}  # O(1) | O(1)
+    # longest window length found so far
     res = 0  # O(1) | O(1)
+    # walk right through s, tracking index and character together
     for right, ch in enumerate(s):  # O(1) | O(n)
+        # if ch's last occurrence is inside the current window, jump left past it
         if ch in last_seen and last_seen[ch] >= left:  # O(1) | O(1)
             left = last_seen[ch] + 1  # O(1) | O(1)
+        # record ch's latest index
         last_seen[ch] = right  # O(n) | O(1)
+        # update the best window length seen so far
         res = max(res, right - left + 1)  # O(1) | O(1)
     return res  # O(1) | O(1)
 

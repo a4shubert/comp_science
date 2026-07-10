@@ -54,11 +54,15 @@ def fibonacci_iterative_ugly(n):
 
 def fibonacci_iterative_nice(n):
     # only tracks the last two values
+    # reject non-positive input up front
     if n <= 0:  # O(1) | O(1)
         raise ValueError("N must be positive")  # O(1) | O(1)
+    # base cases: F(1) = F(2) = 1
     if n == 1 or n == 2:  # O(1) | O(1)
         return 1  # O(1) | O(1)
+    # x, y track F(2), F(1) initially
     x = y = 1  # O(1) | O(1)
+    # advance the pair one Fibonacci step at a time
     for i in range(1, n):  # O(1) | O(n)
         x, y = x + y, x  # O(1) | O(1)
     return y  # O(1) | O(1)
@@ -70,10 +74,13 @@ def fibonacci_iterative_nice(n):
 
 def fibonacci_recursive(n):
     # naive recursion, no memoization
+    # reject non-positive input up front
     if n <= 0:  # O(1) | O(1)
         raise ValueError("N must be positive")  # O(1) | O(1)
+    # base cases: F(1) = F(2) = 1
     if n == 1 or n == 2:  # O(1) | O(1)
         return 1  # O(1) | O(1)
+    # F(n) = F(n-1) + F(n-2), recomputed independently each time
     return fibonacci_recursive(n - 1) + fibonacci_recursive(n - 2)  # O(n) | O(2^n)
 
 
@@ -84,8 +91,10 @@ def fibonacci_recursive(n):
 def fibonacci_functional(n):
     # same (prev, cur) update as fibonacci_iterative_nice, expressed as a fold:
     # start from (F(1), F(2)) = (1, 1) and advance the pair n-1 times
+    # reject negative input up front
     if n < 0:  # O(1) | O(1)
         raise ValueError("N must be non-negative")  # O(1) | O(1)
+    # fold the pair-update lambda over range(n-1), then take the second element
     return reduce(lambda pair, _: (pair[0] + pair[1], pair[0]), range(n - 1), (1, 1))[1]  # O(1) | O(n)
 
 

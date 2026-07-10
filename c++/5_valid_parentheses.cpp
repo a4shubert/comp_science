@@ -42,37 +42,44 @@
 // space: O(n) - one current string alive at a time
 // time: O(n^2) - up to n passes for deeply nested input, each pass O(n)
 bool is_valid_ugly(std::string s) {
-    while (true) {
-        std::string new_s = s;
-        for (const auto& pair : {"()", "[]", "{}"}) {
-            size_t pos;
-            while ((pos = new_s.find(pair)) != std::string::npos) {
-                new_s.erase(pos, 2);
+    while (true) {  // O(1) | O(n)
+        std::string new_s = s;  // O(n) | O(n)
+        for (const auto& pair : {"()", "[]", "{}"}) {  // O(1) | O(1)
+            size_t pos;  // O(1) | O(1)
+            while ((pos = new_s.find(pair)) != std::string::npos) {  // O(1) | O(n)
+                new_s.erase(pos, 2);  // O(n) | O(n)
             }
         }
-        if (new_s == s) break;
-        s = new_s;
+        if (new_s == s) break;  // O(1) | O(n)
+        s = new_s;  // O(n) | O(n)
     }
-    return s.empty();
+    return s.empty();  // O(1) | O(1)
 }
 
 // Space - Time Complexity analysis:
 // space: O(n) - stack can hold up to n opens
 // time: O(n) - single pass, O(1) average unordered_map lookup + O(1) stack top/pop
 bool is_valid(const std::string& s) {
-    std::stack<char> st;
-    std::unordered_map<char, char> pairs = {{')', '('}, {'}', '{'}, {']', '['}};
-    for (char elem : s) {
-        if (elem == '(' || elem == '{' || elem == '[') {
-            st.push(elem);
+    // stack of opening brackets seen so far, not yet closed
+    std::stack<char> st;  // O(1) | O(1)
+    // maps each closing bracket to the opener it must match
+    std::unordered_map<char, char> pairs = {{')', '('}, {'}', '{'}, {']', '['}};  // O(1) | O(1)
+    // walk through s once
+    for (char elem : s) {  // O(1) | O(n)
+        // opening bracket: push it
+        if (elem == '(' || elem == '{' || elem == '[') {  // O(1) | O(1)
+            st.push(elem);  // O(n) | O(1)
         } else {
-            if (st.empty() || st.top() != pairs[elem]) {
+            // closing bracket: it must match whatever is on top
+            if (st.empty() || st.top() != pairs[elem]) {  // O(1) | O(1)
                 return false;
             }
-            st.pop();
+            // matched - remove that opener from the stack
+            st.pop();  // O(1) | O(1)
         }
     }
-    return st.empty();
+    // valid only if every opener got closed
+    return st.empty();  // O(1) | O(1)
 }
 
 // Tests:

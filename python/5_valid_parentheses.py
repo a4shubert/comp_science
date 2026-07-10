@@ -57,15 +57,22 @@ def is_valid_ugly(s):
 ## time: O(n) - single pass, O(1) average dict lookup + O(1) deque end access
 
 def is_valid(s):
+    # stack of opening brackets seen so far, not yet closed
     q = deque()  # O(1) | O(1)
+    # maps each closing bracket to the opener it must match
     pairs = {")": "(", "}": "{", "]": "["}  # O(1) | O(1)
+    # walk through s once
     for elem in s:  # O(1) | O(n)
+        # opening bracket: push it
         if elem in ("(", "{", "["):  # O(1) | O(1)
             q.append(elem)  # O(n) | O(1)
         else:
+            # closing bracket: it must match whatever is on top
             if not q or q[-1] != pairs[elem]:  # O(1) | O(1)
                 return False
+            # matched - remove that opener from the stack
             q.pop()  # O(1) | O(1)
+    # valid only if every opener got closed
     return not q  # O(1) | O(1)
 
 

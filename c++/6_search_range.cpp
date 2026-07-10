@@ -40,28 +40,32 @@
 // space: O(1) - only a couple of index variables are kept regardless of n
 // time: O(n) - single linear pass
 std::vector<int> search_range_ugly(const std::vector<int>& nums, int target) {
-    int first = -1, last = -1;
-    for (size_t i = 0; i < nums.size(); ++i) {
-        if (nums[i] == target) {
-            if (first == -1) first = static_cast<int>(i);
-            last = static_cast<int>(i);
+    int first = -1, last = -1;  // O(1) | O(1)
+    for (size_t i = 0; i < nums.size(); ++i) {  // O(1) | O(n)
+        if (nums[i] == target) {  // O(1) | O(1)
+            if (first == -1) first = static_cast<int>(i);  // O(1) | O(1)
+            last = static_cast<int>(i);  // O(1) | O(1)
         }
     }
-    return {first, last};
+    return {first, last};  // O(1) | O(1)
 }
 
 // Space - Time Complexity analysis:
 // space: O(1) - lower_bound/upper_bound use no extra structures
 // time: O(log n) - two binary searches
 std::vector<int> search_range(const std::vector<int>& nums, int target) {
-    auto left_it = std::lower_bound(nums.begin(), nums.end(), target);
-    if (left_it == nums.end() || *left_it != target) {
+    // iterator to the first position where target could be inserted
+    auto left_it = std::lower_bound(nums.begin(), nums.end(), target);  // O(1) | O(log n)
+    // nothing at that position actually equals target - not present at all
+    if (left_it == nums.end() || *left_it != target) {  // O(1) | O(1)
         return {-1, -1};
     }
-    auto right_it = std::upper_bound(nums.begin(), nums.end(), target);
-    int left = static_cast<int>(left_it - nums.begin());
-    int right = static_cast<int>(right_it - nums.begin()) - 1;
-    return {left, right};
+    // iterator just past target's last occurrence
+    auto right_it = std::upper_bound(nums.begin(), nums.end(), target);  // O(1) | O(log n)
+    // convert iterators to indices
+    int left = static_cast<int>(left_it - nums.begin());  // O(1) | O(1)
+    int right = static_cast<int>(right_it - nums.begin()) - 1;  // O(1) | O(1)
+    return {left, right};  // O(1) | O(1)
 }
 
 // Tests:

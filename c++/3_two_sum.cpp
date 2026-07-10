@@ -39,30 +39,36 @@
 // space: O(1) - no extra structure beyond the loop indices
 // time: O(n^2) - a nested loop checks every pair of indices
 std::vector<int> two_sum_ugly(const std::vector<int>& nums, int target) {
-    for (size_t i = 0; i < nums.size(); ++i) {
-        for (size_t j = i + 1; j < nums.size(); ++j) {
-            if (nums[i] + nums[j] == target) {
-                return {static_cast<int>(i), static_cast<int>(j)};
+    for (size_t i = 0; i < nums.size(); ++i) {  // O(1) | O(n)
+        for (size_t j = i + 1; j < nums.size(); ++j) {  // O(1) | O(n)
+            if (nums[i] + nums[j] == target) {  // O(1) | O(1)
+                return {static_cast<int>(i), static_cast<int>(j)};  // O(1) | O(1)
             }
         }
     }
-    return {-1, -1};
+    return {-1, -1};  // O(1) | O(1)
 }
 
 // Space - Time Complexity analysis:
 // space: O(n) - seen map can hold up to n-1 entries in the worst case
 // time: O(n) - single pass, O(1) average unordered_map lookup/insert
 std::vector<int> two_sum(const std::vector<int>& nums, int target) {
-    std::unordered_map<int, int> seen;
-    for (size_t i = 0; i < nums.size(); ++i) {
-        int complement = target - nums[i];
-        auto it = seen.find(complement);
-        if (it != seen.end()) {
-            return {it->second, static_cast<int>(i)};
+    // hash map from a value seen so far to its index
+    std::unordered_map<int, int> seen;  // O(1) | O(1)
+    // walk through nums once, tracking index i
+    for (size_t i = 0; i < nums.size(); ++i) {  // O(1) | O(n)
+        // the value that would complete the pair with nums[i]
+        int complement = target - nums[i];  // O(1) | O(1)
+        // has the complement already been seen?
+        auto it = seen.find(complement);  // O(1) | O(1)
+        if (it != seen.end()) {  // O(1) | O(1)
+            // found the pair - return both indices
+            return {it->second, static_cast<int>(i)};  // O(1) | O(1)
         }
-        seen[nums[i]] = static_cast<int>(i);
+        // record this value's index for future lookups
+        seen[nums[i]] = static_cast<int>(i);  // O(n) | O(1)
     }
-    return {-1, -1};
+    return {-1, -1};  // O(1) | O(1)
 }
 
 // Tests:

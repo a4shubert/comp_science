@@ -61,12 +61,17 @@ def two_sum_ugly(nums, target):
 ## time: O(n) - single pass, O(1) average dict lookup/insert
 
 def two_sum(nums, target):
-    # single pass: for each v, check whether its complement was already seen
+    # dict mapping each value seen so far to its index
     seen = {}  # O(1) | O(1)
+    # walk through nums once, tracking value and index together
     for i, v in enumerate(nums):  # O(1) | O(n)
+        # the value that would complete the pair with v
         complement = target - v  # O(1) | O(1)
+        # has the complement already been seen?
         if complement in seen:  # O(1) | O(1)
+            # found the pair - return both indices
             return [seen[complement], i]  # O(1) | O(1)
+        # record this value's index for future lookups
         seen[v] = i  # O(n) | O(1)
 
 

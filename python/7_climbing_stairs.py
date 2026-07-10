@@ -55,10 +55,14 @@ def climb_stairs_ugly(n):
 
 @lru_cache(maxsize=None)
 def climb_stairs(n):
+    # base case: one step, one way
     if n == 1:  # O(1) | O(1)
         return 1  # O(1) | O(1)
+    # base case: two steps, two ways (1+1 or 2)
     if n == 2:  # O(1) | O(1)
         return 2  # O(1) | O(1)
+    # ways to reach n = ways to reach n-1, plus ways to reach n-2 -
+    # lru_cache means each distinct n is only ever computed once
     return climb_stairs(n - 1) + climb_stairs(n - 2)  # O(n) | O(n)
 
 

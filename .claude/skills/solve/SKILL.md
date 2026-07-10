@@ -2,41 +2,53 @@
 name: solve
 description: >
   Write a complete, correct solution for a specific numbered interview-prep
-  task file in this repo, e.g. "solve 6" or "/solve 6" implements
-  6_whatever.py properly. Use this whenever the user says "solve <number>",
-  asks you to implement/fix/finish a specific numbered task file, or wants
-  you to write the answer yourself rather than write it themselves. Fills
-  in the Solutions, per-line space|time comments, a Space - Time
-  Complexity analysis block above each function, and validate() - to the
-  same standard used throughout this repo (see 1_factorial.py,
-  3_two_sum.py, 5_valid_parentheses.py).
+  task, in BOTH Python and C++, e.g. "solve 6" or "/solve 6" implements
+  python/6_whatever.py AND c++/6_whatever.cpp properly. Use this whenever
+  the user says "solve <number>", asks you to implement/fix/finish a
+  specific numbered task, or wants you to write the answer yourself rather
+  than write it themselves. Fills in the Solutions, per-line space|time
+  comments, a Space - Time Complexity analysis block above each function,
+  and tests - to the same standard used throughout this repo (see
+  python/1_factorial.py, python/3_two_sum.py, c++/3_two_sum.cpp).
 ---
 
 # solve
 
-Write the real solution for the `<number>_*.py` file the user names — not a
-hint, not a stub, the actual working implementation, commented the way
-every other solved file in this repo is commented. This is the opposite
-mode from normal practice (where the user writes and you review/grade) —
-here they're explicitly asking you to do the writing.
+Write the real solution for task `<number>` — not a hint, not a stub, the
+actual working implementation in **both** `python/<number>_*.py` and
+`c++/<number>_*.cpp`, commented the way every other solved file in this
+repo is commented. This is the opposite mode from normal practice (where
+the user writes and you review/grade) — here they're explicitly asking you
+to do the writing, in both languages.
 
-## Step 1 — Locate the file and read the task
+## Step 1 — Locate the files and read the task
 
-Find the file matching `<number>_*.py` in `python/` (this repo also has a
-sibling `c++/` folder for the same practice in C++ — this skill is
-Python-only, don't touch `c++/`). Read its `# Task:`
-/ `# Hint:` section — the hint names tools by "Ugly way:" / "Right way:"
-(e.g. "nested loops" vs "dict"). Implement **both** named approaches as
-separate functions when the hint gives two, matching the pattern in
-`3_two_sum.py` (`two_sum_ugly` / `two_sum`) and `5_valid_parentheses.py`
+Find `python/<number>_*.py`. Read its `# Task:` / `# Hint:` section — the
+hint names tools by "Ugly way:" / "Right way:" (e.g. "nested loops" vs
+"dict"). Implement **both** named approaches as separate functions when
+the hint gives two, matching the pattern in `3_two_sum.py`
+(`two_sum_ugly` / `two_sum`) and `5_valid_parentheses.py`
 (`is_valid_ugly` / `is_valid`) — the point of keeping both is comparing
 complexity, not just shipping the fast one.
 
-If the file already has a partial/buggy attempt in it, you don't need to
-preserve its structure — write it properly, the way you would in a review
-where you'd flag it as needing a real fix rather than a patch. Don't leave
-dead code, shadowed builtins, or unhandled edge cases (e.g. empty input,
-input with no valid answer) that a live interviewer would flag.
+Then check for `c++/<number>_*.cpp`. If it exists, solve it too (Step 5).
+If it doesn't exist yet (e.g. the number predates this skill writing both
+languages), create it first — mirror the Python file's Theory/Task/Hint/
+Tests, translated to C++ comment syntax with a `// Headers & STL
+components:` section in place of `# Packages:` (see the `next` skill's
+Step 6 for the exact template) — then solve it the same as if it already
+existed.
+
+If either file already has a partial/buggy attempt in it, you don't need
+to preserve its structure — write it properly, the way you would in a
+review where you'd flag it as needing a real fix rather than a patch.
+Don't leave dead code, shadowed builtins/names, or unhandled edge cases
+(e.g. empty input, input with no valid answer) that a live interviewer
+would flag.
+
+The rest of this skill is organized in two halves: Steps 2-4 are Python,
+Step 5 is the C++ equivalent of all three, Step 6 verifies both, Step 7
+reports back on both.
 
 ## Step 2 — Comment every line with space | time complexity
 
@@ -80,6 +92,34 @@ as a correction or comparison against a wrong/previous value (e.g. don't
 write "O(1) not O(n)" or "this is actually O(n), unlike before"). There's
 no prior version in this mode; write the right answer plainly as if it
 were the only one that ever existed.
+
+In the **optimized function only** (`<function_name>`, not `_ugly`), add
+a second comment directly above each line — a short plain-English phrase
+for what that line *does*, separate from the `# O(space) | O(time)` that
+stays trailing on the code line itself:
+
+```python
+def two_sum(nums, target):
+    # dict mapping each value seen so far to its index
+    seen = {}  # O(1) | O(1)
+    # walk through nums once, tracking value and index together
+    for i, v in enumerate(nums):  # O(1) | O(n)
+        # the value that would complete the pair with v
+        complement = target - v  # O(1) | O(1)
+        # has the complement already been seen?
+        if complement in seen:  # O(1) | O(1)
+            # found the pair - return both indices
+            return [seen[complement], i]  # O(1) | O(1)
+        # record this value's index for future lookups
+        seen[v] = i  # O(n) | O(1)
+```
+
+This is why the optimized function usually needs the walkthrough — it's
+the one using the less-obvious tool, so a reader benefits from being told
+what each step accomplishes, not just its cost. The `_ugly` function
+stays as Step 2 describes it above (trailing complexity comment only, no
+above-line description) — it's the brute-force approach, generally
+self-explanatory without a line-by-line narration.
 
 ## Step 3 — Give each function its own Space - Time Complexity analysis block
 
@@ -125,17 +165,72 @@ answer, all-duplicates, etc. — whatever's relevant to this problem), and
 make sure the loop exercises every function variant you wrote, not just
 one. `print("SUCCESS")` stays as the last line, after all asserts.
 
-`__main__` should end up with only `validate()` — no debug `print(...)`
-calls left behind. The commented-out-`validate()`-plus-debug-`print`
-pattern is the user's own in-progress debugging convention for *their*
-unfinished attempts; once `solve` produces a finished, correct file, that
-scaffolding is no longer needed — delete any `print(...)` lines under
-`__main__` and leave `validate()` as the one active call.
+`__main__` should end up with only `validate()` — no `print(...)` calls
+of any kind:
 
-## Step 5 — Verify
+```python
+if __name__ == "__main__":
+    validate()
+```
 
-These filenames start with a digit and can't be imported normally — load
-by path and call `validate()` directly:
+Don't leave `validate()` commented out — once `solve` produces a
+finished, correct file, `validate()` should actually run and confirm
+`SUCCESS`. Debug prints (per-case or otherwise) are the user's own
+in-progress workflow for *their* unfinished attempts (see the `next`
+skill); once `solve` hands back a finished file, that scaffolding is
+gone — `validate()` passing is the only signal needed.
+
+## Step 5 — Do the same for C++
+
+Same standards as Steps 2-4, translated:
+
+- **Per-line comments**: `// O(space) | O(time)`, bare, no parenthetical —
+  same reasoning rules as Step 2 (recursive calls get the function's
+  overall contribution; `std::deque` is O(1) at both ends, `std::vector`
+  is O(1) at the back but O(n) at the front; slicing/copying containers
+  costs O(k); a line that grows a container across iterations gets the
+  cumulative worst-case size as its space mark). In the optimized
+  function only, also add a `//` line above each statement describing
+  what it does — same rule as Step 2's Python example, `//` instead of
+  `#`, `_ugly` gets the trailing complexity comment only.
+- **Complexity block**: `// Space - Time Complexity analysis:` directly
+  above each function, with `// space:`/`// time:` lines and a mandatory
+  one-sentence reason on both — same as Step 3, `//` instead of `#`.
+- **Tests**: fill in `void validate()` with `assert(...)` per case (same
+  coverage as the Python file's `validate()`, plus the same edge cases),
+  ending with `std::cout << "SUCCESS" << std::endl;`. `main()` should
+  contain only `validate(); return 0;` — no debug output, matching the
+  Python side's Step 4 rule.
+
+```cpp
+// Space - Time Complexity analysis:
+// space: O(n) - dict can grow to hold up to n entries
+// time: O(n) - single pass, O(1) average unordered_map lookup/insert
+
+std::vector<int> two_sum(const std::vector<int>& nums, int target) {
+    ...
+}
+
+// Tests:
+void validate() {
+    ...
+    std::cout << "SUCCESS" << std::endl;
+}
+
+int main() {
+    validate();
+    return 0;
+}
+```
+
+Keep function names identical to the Python file's (`two_sum_ugly`,
+`two_sum`, etc.) so the two languages read as direct translations of each
+other, not divergent implementations.
+
+## Step 6 — Verify both
+
+Python — these filenames start with a digit and can't be imported
+normally, load by path and call `validate()` directly:
 
 ```python
 import importlib.util
@@ -145,12 +240,19 @@ spec.loader.exec_module(mod)
 mod.validate()
 ```
 
-Must print `SUCCESS`. If it doesn't, fix the actual bug before reporting
-back — don't hand over something that fails its own tests.
+C++ — compile with warnings on and run the binary:
 
-## Step 6 — Report back
+```bash
+g++ -std=c++20 -Wall -Wextra c++/<number>_whatever.cpp -o /tmp/<name> && /tmp/<name>
+```
 
-Briefly: which file, which function(s) written, and their complexities.
-State them as plain facts, not as fixes or corrections to what was there
-before — no "was wrong, now it's...", just what it is. Keep it to a few
-lines — the file is the deliverable.
+Both must print `SUCCESS`, and the C++ compile must produce no warnings.
+If either doesn't, fix the actual bug before reporting back — don't hand
+over something that fails its own tests.
+
+## Step 7 — Report back
+
+Briefly: which two files, which function(s) written in each, and their
+complexities. State them as plain facts, not as fixes or corrections to
+what was there before — no "was wrong, now it's...", just what it is.
+Keep it to a few lines — the files are the deliverable.

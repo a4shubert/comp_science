@@ -37,9 +37,12 @@ from operator import mul
 
 def factorial_iterative(n):
     # n! = 1 * 2 * 3 * .... n
+    # reject negative input up front
     if n < 0:  # O(1) | O(1)
         raise ValueError("N must be non-negative")  # O(1) | O(1)
+    # running product, starts at the multiplicative identity
     res = 1  # O(1) | O(1)
+    # multiply in each factor from n down to 2
     for i in range(n, 1, -1):  # O(1) | O(n)
         res *= i  # O(1) | O(1)
     return res  # O(1) | O(1)
@@ -51,10 +54,13 @@ def factorial_iterative(n):
 
 def factorial_recursive(n):
     # n! = n * (n-1) * (n-2) * ... * 1
+    # reject negative input up front
     if n < 0:  # O(1) | O(1)
         raise ValueError("N must be non-negative")  # O(1) | O(1)
+    # base case: 0! = 1
     if n == 0:  # exit recursion  # O(1) | O(1)
         return 1  # O(1) | O(1)
+    # n! = n times (n-1)!
     return n * factorial_recursive(n - 1)  # O(n) | O(n)
 
 
@@ -64,8 +70,10 @@ def factorial_recursive(n):
 
 def factorial_functional(n):
     # n! expressed as a fold over range(2, n+1)
+    # reject negative input up front
     if n < 0:  # O(1) | O(1)
         raise ValueError("N must be non-negative")  # O(1) | O(1)
+    # fold multiplication over 2..n, starting from the identity 1
     return reduce(mul, range(2, n + 1), 1)  # O(1) | O(n)
 
 

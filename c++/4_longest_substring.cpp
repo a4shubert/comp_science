@@ -40,35 +40,42 @@
 // space: O(n) - holding one substring's character set up to length n at a time
 // time: O(n^3) - O(n^2) (i, j) pairs, each costing O(n) to build the substring + set
 int length_of_longest_substring_ugly(const std::string& s) {
-    int res = 0;
-    for (size_t i = 0; i < s.size(); ++i) {
-        for (size_t j = i + 1; j <= s.size(); ++j) {
-            std::string substr = s.substr(i, j - i);
-            std::unordered_set<char> chars(substr.begin(), substr.end());
-            if (chars.size() == substr.size()) {
-                res = std::max(res, static_cast<int>(substr.size()));
+    int res = 0;  // O(1) | O(1)
+    for (size_t i = 0; i < s.size(); ++i) {  // O(1) | O(n)
+        for (size_t j = i + 1; j <= s.size(); ++j) {  // O(1) | O(n)
+            std::string substr = s.substr(i, j - i);  // O(n) | O(n)
+            std::unordered_set<char> chars(substr.begin(), substr.end());  // O(n) | O(n)
+            if (chars.size() == substr.size()) {  // O(1) | O(1)
+                res = std::max(res, static_cast<int>(substr.size()));  // O(1) | O(1)
             }
         }
     }
-    return res;
+    return res;  // O(1) | O(1)
 }
 
 // Space - Time Complexity analysis:
 // space: O(n) - last_seen map can grow to hold up to n entries
 // time: O(n) - single pass, O(1) average unordered_map ops
 int length_of_longest_substring(const std::string& s) {
-    std::unordered_map<char, int> last_seen;
-    int left = 0, res = 0;
-    for (int right = 0; right < static_cast<int>(s.size()); ++right) {
-        char ch = s[right];
-        auto it = last_seen.find(ch);
-        if (it != last_seen.end() && it->second >= left) {
-            left = it->second + 1;
+    // map from each char to the index it was last seen at
+    std::unordered_map<char, int> last_seen;  // O(1) | O(1)
+    // left edge of the current no-repeat window; best window length so far
+    int left = 0, res = 0;  // O(1) | O(1)
+    // walk right through s
+    for (int right = 0; right < static_cast<int>(s.size()); ++right) {  // O(1) | O(n)
+        char ch = s[right];  // O(1) | O(1)
+        // has ch been seen before?
+        auto it = last_seen.find(ch);  // O(1) | O(1)
+        // if its last occurrence is inside the current window, jump left past it
+        if (it != last_seen.end() && it->second >= left) {  // O(1) | O(1)
+            left = it->second + 1;  // O(1) | O(1)
         }
-        last_seen[ch] = right;
-        res = std::max(res, right - left + 1);
+        // record ch's latest index
+        last_seen[ch] = right;  // O(n) | O(1)
+        // update the best window length seen so far
+        res = std::max(res, right - left + 1);  // O(1) | O(1)
     }
-    return res;
+    return res;  // O(1) | O(1)
 }
 
 // Tests:

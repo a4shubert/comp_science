@@ -39,31 +39,40 @@
 // space: O(1) - only a running product and loop counter are kept
 // time: O(n) - the loop runs n times, one multiplication per iteration
 unsigned long long factorial_iterative(int n) {
-    if (n < 0) throw std::invalid_argument("n must be non-negative");
-    unsigned long long res = 1;
-    for (int i = 2; i <= n; ++i) {
-        res *= i;
+    // reject negative input up front
+    if (n < 0) throw std::invalid_argument("n must be non-negative");  // O(1) | O(1)
+    // running product, starts at the multiplicative identity
+    unsigned long long res = 1;  // O(1) | O(1)
+    // multiply in each factor from 2 up to n
+    for (int i = 2; i <= n; ++i) {  // O(1) | O(n)
+        res *= i;  // O(1) | O(1)
     }
-    return res;
+    return res;  // O(1) | O(1)
 }
 
 // Space - Time Complexity analysis:
 // space: O(n) - call stack depth n
 // time: O(n) - one recursive call per level, from n down to the base case
 unsigned long long factorial_recursive(int n) {
-    if (n < 0) throw std::invalid_argument("n must be non-negative");
-    if (n == 0) return 1;
-    return static_cast<unsigned long long>(n) * factorial_recursive(n - 1);
+    // reject negative input up front
+    if (n < 0) throw std::invalid_argument("n must be non-negative");  // O(1) | O(1)
+    // base case: 0! = 1
+    if (n == 0) return 1;  // O(1) | O(1)
+    // n! = n times (n-1)!
+    return static_cast<unsigned long long>(n) * factorial_recursive(n - 1);  // O(n) | O(n)
 }
 
 // Space - Time Complexity analysis:
 // space: O(1) - views::iota is a lazy range, nothing is materialized
 // time: O(n) - accumulate performs n-1 multiplications
 unsigned long long factorial_functional(int n) {
-    if (n < 0) throw std::invalid_argument("n must be non-negative");
-    auto range = std::views::iota(2, std::max(2, n + 1));
+    // reject negative input up front
+    if (n < 0) throw std::invalid_argument("n must be non-negative");  // O(1) | O(1)
+    // lazy range 2..n (clamped so n=0/1 produce an empty range, not an invalid one)
+    auto range = std::views::iota(2, std::max(2, n + 1));  // O(1) | O(1)
+    // fold multiplication over the range, starting from the identity 1
     return std::accumulate(range.begin(), range.end(), 1ULL,
-                            std::multiplies<unsigned long long>());
+                            std::multiplies<unsigned long long>());  // O(1) | O(n)
 }
 
 // Tests:

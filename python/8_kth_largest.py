@@ -31,25 +31,33 @@
 
 
 # Solutions:
+import heapq
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(n) - sorted() builds a new list holding all n elements
+## time: O(n log n) - sorting dominates
 
-from heapq import h
 def kth_largest_ugly(nums, k):
-    
-    for i,v in enumerate(nums):
-        
-        
+    sorted_nums = sorted(nums, reverse=True)  # O(n) | O(n log n)
+    return sorted_nums[k - 1]  # O(1) | O(1)
 
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(k) - the heap never holds more than k elements at once
+## time: O(n log k) - n pushes/pops, each costing O(log k) on a size-k heap
 
 def kth_largest(nums, k):
-    return kth_largest_ugly(nums, k)
+    # min-heap that will hold the k largest values seen so far
+    heap = []  # O(1) | O(1)
+    # walk through nums once
+    for num in nums:  # O(1) | O(n)
+        # add the current number as a candidate
+        heapq.heappush(heap, num)  # O(k) | O(log k)
+        # heap grew past k - drop the smallest of the current top-k+1
+        if len(heap) > k:  # O(1) | O(1)
+            heapq.heappop(heap)  # O(1) | O(log k)
+    # smallest of the k largest is exactly the k-th largest overall
+    return heap[0]  # O(1) | O(1)
 
 
 # Tests:
@@ -70,5 +78,4 @@ def validate():
 
 
 if __name__ == "__main__":
-    # validate()
-    print(kth_largest_ugly([3, 2, 1, 5, 6, 4], 2))
+    validate()

@@ -57,9 +57,12 @@ def search_range_ugly(nums, target):
 ## time: O(log n) - two binary searches via bisect
 
 def search_range(nums, target):
+    # first index where target could be inserted (its first occurrence, if present)
     left = bisect_left(nums, target)  # O(1) | O(log n)
+    # nothing at that position actually equals target - not present at all
     if left == len(nums) or nums[left] != target:  # O(1) | O(1)
         return [-1, -1]
+    # index right after target's last occurrence, minus one, gives the last occurrence
     right = bisect_right(nums, target) - 1  # O(1) | O(log n)
     return [left, right]  # O(1) | O(1)
 

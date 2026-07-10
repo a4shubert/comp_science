@@ -40,29 +40,35 @@
 // space: O(n) - call stack depth n
 // time: O(2^n) - same recurrence shape as naive Fibonacci; total calls double each level
 long long climb_stairs_ugly(int n) {
-    if (n <= 0) throw std::invalid_argument("n must be positive");
-    if (n == 1) return 1;
-    if (n == 2) return 2;
-    return climb_stairs_ugly(n - 1) + climb_stairs_ugly(n - 2);
+    if (n <= 0) throw std::invalid_argument("n must be positive");  // O(1) | O(1)
+    if (n == 1) return 1;  // O(1) | O(1)
+    if (n == 2) return 2;  // O(1) | O(1)
+    return climb_stairs_ugly(n - 1) + climb_stairs_ugly(n - 2);  // O(n) | O(2^n)
 }
 
 // Space - Time Complexity analysis:
 // space: O(n) - cache holds one entry per distinct n, plus call stack depth n
 // time: O(n) - each distinct n is computed once thanks to the cache; O(1) work per call after that
 long long climb_stairs(int n, std::unordered_map<int, long long>& cache) {
-    if (n <= 0) throw std::invalid_argument("n must be positive");
-    if (n == 1) return 1;
-    if (n == 2) return 2;
-    auto it = cache.find(n);
-    if (it != cache.end()) return it->second;
-    long long result = climb_stairs(n - 1, cache) + climb_stairs(n - 2, cache);
-    cache[n] = result;
-    return result;
+    if (n <= 0) throw std::invalid_argument("n must be positive");  // O(1) | O(1)
+    // base case: one step, one way
+    if (n == 1) return 1;  // O(1) | O(1)
+    // base case: two steps, two ways (1+1 or 2)
+    if (n == 2) return 2;  // O(1) | O(1)
+    // has this n already been computed?
+    auto it = cache.find(n);  // O(1) | O(1)
+    if (it != cache.end()) return it->second;  // O(1) | O(1)
+    // ways to reach n = ways to reach n-1, plus ways to reach n-2
+    long long result = climb_stairs(n - 1, cache) + climb_stairs(n - 2, cache);  // O(n) | O(n)
+    // cache this n so it's never recomputed
+    cache[n] = result;  // O(n) | O(1)
+    return result;  // O(1) | O(1)
 }
 
 long long climb_stairs(int n) {
-    std::unordered_map<int, long long> cache;
-    return climb_stairs(n, cache);
+    // fresh cache for this top-level call
+    std::unordered_map<int, long long> cache;  // O(1) | O(1)
+    return climb_stairs(n, cache);  // O(1) | O(1)
 }
 
 // Tests:
