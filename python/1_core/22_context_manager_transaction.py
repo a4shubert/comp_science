@@ -34,29 +34,43 @@
 ## via `with Transaction(log):`.
 
 
+# Solutions:
+
+# Space - Time Complexity analysis:
+## space: O(1) - appends two entries to an existing log, no new structure scales with input
+## time: O(1) - a fixed number of log appends regardless of should_raise
+
+def run_transaction_ugly(log, should_raise):
+    log.append("BEGIN")  # O(1) | O(1)
+    try:
+        if should_raise:  # O(1) | O(1)
+            raise ValueError("boom")  # O(1) | O(1)
+    except ValueError:
+        log.append("ROLLBACK")  # O(1) | O(1)
+        raise
+    else:
+        log.append("COMMIT")  # O(1) | O(1)
+
+
 class Transaction:
     def __init__(self, log):
         self.log = log
 
+    # Space - Time Complexity analysis:
+    ## space: O(1) - a single log append, no new structure scales with input
+    ## time: O(1) - one append
+
     def __enter__(self):
-        pass
+        self.log.append("BEGIN")  # O(1) | O(1)
+        return self
+
+    # Space - Time Complexity analysis:
+    ## space: O(1) - a single log append, no new structure scales with input
+    ## time: O(1) - one append; returning False re-raises whatever exception occurred
 
     def __exit__(self, exc_type, exc_value, traceback):
-        pass
-
-
-def run_transaction_ugly(log, should_raise):
-    pass
-
-
-# Solutions:
-
-# Space - Time Complexity analysis:
-## space:
-## time:
-
-def run_transaction(log, should_raise):
-    return run_transaction_ugly(log, should_raise)
+        self.log.append("ROLLBACK" if exc_type is not None else "COMMIT")  # O(1) | O(1)
+        return False
 
 
 # Tests:
@@ -93,7 +107,4 @@ def validate():
 
 
 if __name__ == "__main__":
-    # validate()
-    log = []
-    run_transaction_ugly(log, should_raise=False)
-    print(log)
+    validate()

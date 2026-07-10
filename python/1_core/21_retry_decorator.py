@@ -41,22 +41,28 @@ import functools
 # Solutions:
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(1) - only the last exception is held onto, no structure grows with the number of attempts
+## time: O(times) - up to `times` calls to fn in the worst case (every attempt but the last fails)
 
 def retry_ugly(fn, times, *args, **kwargs):
-    pass
+    last_exc = None  # O(1) | O(1)
+    for _ in range(times):  # O(1) | O(times)
+        try:
+            return fn(*args, **kwargs)  # O(1) | O(1)
+        except Exception as exc:  # O(1) | O(1)
+            last_exc = exc  # O(1) | O(1)
+    raise last_exc  # O(1) | O(1)
 
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(1) - only the last exception is held onto, same as the ugly version
+## time: O(times) - up to `times` calls to the wrapped function in the worst case
 
 def retry(times):
     def decorator(fn):
         @functools.wraps(fn)
         def wrapper(*args, **kwargs):
-            pass
+            return retry_ugly(fn, times, *args, **kwargs)  # O(1) | O(times)
         return wrapper
     return decorator
 
@@ -113,8 +119,4 @@ def validate():
 
 
 if __name__ == "__main__":
-    # validate()
-    flaky, _ = make_flaky(fail_times=2)
-    print(retry_ugly(flaky, 3))
-    immediate, _ = make_flaky(fail_times=0)
-    print(retry_ugly(immediate, 3))
+    validate()

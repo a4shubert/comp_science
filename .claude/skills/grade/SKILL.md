@@ -22,8 +22,8 @@ implementation, and flag code-quality issues. Don't rewrite their solution
 for them — this is a review, not a fix, unless they separately ask you to
 patch something.
 
-This skill is Python-only (this repo's `c++/` side is handled by `solve`,
-not reviewed here). The repo is split into topic folders — `python/1_core/`,
+This repo is Python-only (there used to be a mirrored `c++/` tree, but it
+was deleted). It's split into topic folders — `python/1_core/`,
 `python/2_ds/`, `python/3_algo/`, `python/numpy/`, `python/scipy/`,
 `python/pandas/` — each numbered independently from 1, so a bare number is
 ambiguous.

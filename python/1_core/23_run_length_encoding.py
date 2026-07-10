@@ -31,22 +31,38 @@
 ## directly, count each group's size.
 
 
+import itertools
+
+
 # Solutions:
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(k) - result list holds one (value, count) pair per run, k <= n
+## time: O(n) - single pass, one comparison per element
 
 def run_length_encode_ugly(seq):
-    pass
+    result = []  # O(1) | O(1)
+    prev = None  # O(1) | O(1)
+    count = 0  # O(1) | O(1)
+    for x in seq:  # O(1) | O(n)
+        if x == prev:  # O(1) | O(1)
+            count += 1  # O(1) | O(1)
+        else:
+            if prev is not None:  # O(1) | O(1)
+                result.append((prev, count))  # O(k) | O(1)
+            prev = x  # O(1) | O(1)
+            count = 1  # O(1) | O(1)
+    if prev is not None:  # O(1) | O(1)
+        result.append((prev, count))  # O(k) | O(1)
+    return result  # O(1) | O(1)
 
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(k) - result list holds one (value, count) pair per run, k <= n
+## time: O(n) - itertools.groupby makes a single pass; summing each group's size visits every element once
 
 def run_length_encode(seq):
-    return run_length_encode_ugly(seq)
+    return [(value, sum(1 for _ in group)) for value, group in itertools.groupby(seq)]  # O(n) | O(n)
 
 
 # Tests:
@@ -68,9 +84,4 @@ def validate():
 
 
 if __name__ == "__main__":
-    # validate()
-    print(run_length_encode_ugly("aaabbbccd"))
-    print(run_length_encode_ugly([1, 1, 2, 2, 2, 3]))
-    print(run_length_encode_ugly(""))
-    print(run_length_encode_ugly("aaaa"))
-    print(run_length_encode_ugly("abcd"))
+    validate()

@@ -33,22 +33,27 @@
 ## instead of writing the closure by hand.
 
 
+import functools
+
+
 # Solutions:
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(k) - the closure captures fixed_args (k items) and a reference to fn
+## time: O(1) to build; each call is O(k+m) to merge k fixed args with m call-time args before invoking fn
 
 def specialize_ugly(fn, fixed_args):
-    pass
+    def specialized(*args):  # O(1) | O(1)
+        return fn(*fixed_args, *args)  # O(k+m) | O(k+m)
+    return specialized  # O(1) | O(1)
 
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(k) - functools.partial stores fixed_args (k items) and a reference to fn internally
+## time: O(1) to build; each call is O(k+m) for functools.partial to merge fixed and call-time args
 
 def specialize(fn, fixed_args):
-    return specialize_ugly(fn, fixed_args)
+    return functools.partial(fn, *fixed_args)  # O(k) | O(k)
 
 
 # Tests:
@@ -69,7 +74,4 @@ def validate():
 
 
 if __name__ == "__main__":
-    # validate()
-    print(specialize_ugly(lambda base, exp: base ** exp, (2,))(10))
-    print(specialize_ugly(lambda a, b, c: a + b + c, (1, 2))(3))
-    print(specialize_ugly(lambda x: x * 3, ())(4))
+    validate()

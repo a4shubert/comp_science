@@ -46,30 +46,34 @@ class PaymentProcessor(ABC):
 
 class CreditCardProcessor(PaymentProcessor):
     def process(self, amount):
-        pass
+        return f"Charged ${amount} to credit card"
 
 
 class PayPalProcessor(PaymentProcessor):
     def process(self, amount):
-        pass
+        return f"Paid ${amount} via PayPal"
 
 
 # Solutions:
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(n) - results list grows to hold one entry per processor
+## time: O(n) - one hasattr check plus one process() call per processor
 
 def process_all_ugly(processors, amount):
-    pass
+    results = []  # O(1) | O(1)
+    for p in processors:  # O(1) | O(n)
+        if hasattr(p, "process"):  # O(1) | O(1)
+            results.append(p.process(amount))  # O(n) | O(1)
+    return results  # O(1) | O(1)
 
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(n) - result list grows to hold one entry per processor
+## time: O(n) - one process() call per processor, no duck-typing check needed - the ABC guarantees it exists
 
 def process_all(processors, amount):
-    return process_all_ugly(processors, amount)
+    return [p.process(amount) for p in processors]  # O(n) | O(n)
 
 
 # Tests:
@@ -90,7 +94,4 @@ def validate():
 
 
 if __name__ == "__main__":
-    # validate()
-    print(process_all_ugly([CreditCardProcessor(), PayPalProcessor()], 100))
-    print(process_all_ugly([PayPalProcessor()], 50))
-    print(process_all_ugly([], 10))
+    validate()

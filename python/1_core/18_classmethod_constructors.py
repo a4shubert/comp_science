@@ -32,35 +32,41 @@
 ## constructed Point directly.
 
 
+# Solutions:
+
+# Space - Time Complexity analysis:
+## space: O(1) - a fixed-size tuple, independent of anything else in the program
+## time: O(1) - one string split on a fixed-length input
+
+def parse_point_string_ugly(s):
+    x_str, y_str = s.split(",")  # O(1) | O(1)
+    return (int(x_str), int(y_str))  # O(1) | O(1)
+
+
+def point_from_string_ugly(s):
+    x, y = parse_point_string_ugly(s)
+    return Point(x, y)
+
+
 class Point:
     def __init__(self, x, y):
         self.x = x
         self.y = y
 
     def __eq__(self, other):
-        pass
+        return isinstance(other, Point) and self.x == other.x and self.y == other.y
 
     def __repr__(self):
-        pass
+        return f"Point({self.x}, {self.y})"
+
+    # Space - Time Complexity analysis:
+    ## space: O(1) - one new Point instance, independent of anything else in the program
+    ## time: O(1) - one string split on a fixed-length input
 
     @classmethod
     def from_string(cls, s):
-        pass
-
-
-def parse_point_string_ugly(s):
-    pass
-
-
-# Solutions:
-
-# Space - Time Complexity analysis:
-## space:
-## time:
-
-def point_from_string_ugly(s):
-    x, y = parse_point_string_ugly(s)
-    return Point(x, y)
+        x_str, y_str = s.split(",")  # O(1) | O(1)
+        return cls(int(x_str), int(y_str))  # O(1) | O(1)
 
 
 # Tests:
@@ -83,7 +89,4 @@ def validate():
 
 
 if __name__ == "__main__":
-    # validate()
-    print(point_from_string_ugly("3,4"))
-    print(point_from_string_ugly("-1,7"))
-    print(point_from_string_ugly("0,0"))
+    validate()

@@ -31,22 +31,30 @@
 ## instead of tracking the running value by hand.
 
 
+import itertools
+
+
 # Solutions:
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(n) - result list grows to hold one entry per input element
+## time: O(n) - single pass, one comparison per element
 
 def running_maximum_ugly(nums):
-    pass
+    result = []  # O(1) | O(1)
+    running_max = None  # O(1) | O(1)
+    for x in nums:  # O(1) | O(n)
+        running_max = x if running_max is None else max(running_max, x)  # O(1) | O(1)
+        result.append(running_max)  # O(n) | O(1)
+    return result  # O(1) | O(1)
 
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(n) - itertools.accumulate is a lazy generator, but list() materializes n results
+## time: O(n) - one max comparison per element, same single pass as the ugly version
 
 def running_maximum(nums):
-    return running_maximum_ugly(nums)
+    return list(itertools.accumulate(nums, max))  # O(n) | O(n)
 
 
 # Tests:
@@ -68,9 +76,4 @@ def validate():
 
 
 if __name__ == "__main__":
-    # validate()
-    print(running_maximum_ugly([3, 1, 4, 1, 5, 9, 2, 6]))
-    print(running_maximum_ugly([5, 4, 3, 2, 1]))
-    print(running_maximum_ugly([-1, -5, -2, 0, -3]))
-    print(running_maximum_ugly([]))
-    print(running_maximum_ugly([7]))
+    validate()

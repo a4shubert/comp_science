@@ -35,43 +35,55 @@
 ## through the same underlying value, always in sync.
 
 
+# Solutions:
+
+# Space - Time Complexity analysis:
+## space: O(1) - a single float, independent of anything else in the program
+## time: O(1) - one multiply and one add
+
+def celsius_to_fahrenheit_ugly(celsius):
+    return celsius * 9 / 5 + 32  # O(1) | O(1)
+
+
+# Space - Time Complexity analysis:
+## space: O(1) - a single float, independent of anything else in the program
+## time: O(1) - one subtract and one multiply
+
+def fahrenheit_to_celsius_ugly(fahrenheit):
+    return (fahrenheit - 32) * 5 / 9  # O(1) | O(1)
+
+
+def read_fahrenheit(temperature):
+    return celsius_to_fahrenheit_ugly(temperature._celsius)
+
+
 class Temperature:
     def __init__(self, celsius):
         self._celsius = celsius
 
     @property
     def celsius(self):
-        pass
+        return self._celsius
 
     @celsius.setter
     def celsius(self, value):
-        pass
+        self._celsius = value
+
+    # Space - Time Complexity analysis:
+    ## space: O(1) - reads the single underlying _celsius field, no extra structure
+    ## time: O(1) - one multiply and one add, same conversion as the ugly version
 
     @property
     def fahrenheit(self):
-        pass
+        return celsius_to_fahrenheit_ugly(self._celsius)  # O(1) | O(1)
+
+    # Space - Time Complexity analysis:
+    ## space: O(1) - writes the single underlying _celsius field, no extra structure
+    ## time: O(1) - one subtract and one multiply, same conversion as the ugly version
 
     @fahrenheit.setter
     def fahrenheit(self, value):
-        pass
-
-
-def celsius_to_fahrenheit_ugly(celsius):
-    pass
-
-
-def fahrenheit_to_celsius_ugly(fahrenheit):
-    pass
-
-
-# Solutions:
-
-# Space - Time Complexity analysis:
-## space:
-## time:
-
-def read_fahrenheit(temperature):
-    return celsius_to_fahrenheit_ugly(temperature._celsius)
+        self._celsius = fahrenheit_to_celsius_ugly(value)  # O(1) | O(1)
 
 
 # Tests:
@@ -94,7 +106,4 @@ def validate():
 
 
 if __name__ == "__main__":
-    # validate()
-    print(celsius_to_fahrenheit_ugly(0))
-    print(celsius_to_fahrenheit_ugly(100))
-    print(fahrenheit_to_celsius_ugly(32))
+    validate()

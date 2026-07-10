@@ -35,19 +35,29 @@
 # Solutions:
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(n) - the recursive call stack can go as deep as the nesting, plus the full result list holds all n leaf elements at once
+## time: O(n) - every leaf element and every list boundary is visited exactly once
 
 def flatten_ugly(nested):
-    pass
+    result = []  # O(1) | O(1)
+    for item in nested:  # O(1) | O(k) - k elements at this level
+        if isinstance(item, list):  # O(1) | O(1)
+            result.extend(flatten_ugly(item))  # O(n) | O(n) - recurses into and copies the sub-result
+        else:
+            result.append(item)  # O(n) | O(1)
+    return result  # O(1) | O(1)
 
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(d) - d is the max nesting depth (recursive generator call stack); no result list is ever fully materialized by this function itself
+## time: O(n) - every leaf element and every list boundary is visited exactly once, one yield at a time
 
 def flatten(nested):
-    return flatten_ugly(nested)
+    for item in nested:  # O(1) | O(k) - k elements at this level
+        if isinstance(item, list):  # O(1) | O(1)
+            yield from flatten(item)  # O(1) | O(1) - delegates lazily, no intermediate list built here
+        else:
+            yield item  # O(1) | O(1)
 
 
 # Tests:
@@ -71,8 +81,4 @@ def validate():
 
 
 if __name__ == "__main__":
-    # validate()
-    print(flatten_ugly([1, [2, 3, [4, 5]], 6]))
-    print(flatten_ugly([[1, 2], [3, [4, [5, 6]]]]))
-    print(flatten_ugly([]))
-    print(flatten_ugly([1, 2, 3]))
+    validate()

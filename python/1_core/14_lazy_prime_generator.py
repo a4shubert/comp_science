@@ -35,22 +35,50 @@
 ## time, combined with itertools.islice to take exactly n of them.
 
 
+import itertools
+import math
+
+
+def _is_prime(candidate):
+    if candidate < 2:
+        return False
+    for d in range(2, math.isqrt(candidate) + 1):
+        if candidate % d == 0:
+            return False
+    return True
+
+
+def _prime_stream():
+    n = 2
+    while True:
+        if _is_prime(n):
+            yield n
+        n += 1
+
+
 # Solutions:
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(bound) - materializes every candidate up to the guessed bound at once, and repeats from scratch with a doubled bound whenever it wasn't enough
+## time: O(bound * sqrt(bound)) per attempt - each retry re-filters the whole range from scratch instead of resuming where the last attempt left off
 
 def first_n_primes_ugly(n):
-    pass
+    bound = 10  # O(1) | O(1)
+    primes = []  # O(1) | O(1)
+    while True:  # O(1) | O(retries)
+        primes = [x for x in range(2, bound) if _is_prime(x)]  # O(bound) | O(bound * sqrt(bound))
+        if len(primes) >= n:  # O(1) | O(1)
+            break  # O(1) | O(1)
+        bound *= 2  # O(1) | O(1)
+    return primes[:n]  # O(n) | O(n)
 
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(n) - itertools.islice materializes exactly n primes into the result list; the generator itself holds no history
+## time: O(n * sqrt(largest_prime)) - islice pulls exactly n primes from the generator, each requiring an O(sqrt(candidate)) primality check
 
 def first_n_primes(n):
-    return first_n_primes_ugly(n)
+    return list(itertools.islice(_prime_stream(), n))  # O(n) | O(n * sqrt(largest_prime))
 
 
 # Tests:
@@ -71,8 +99,4 @@ def validate():
 
 
 if __name__ == "__main__":
-    # validate()
-    print(first_n_primes_ugly(5))
-    print(first_n_primes_ugly(1))
-    print(first_n_primes_ugly(10))
-    print(first_n_primes_ugly(2))
+    validate()

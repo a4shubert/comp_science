@@ -3,22 +3,21 @@ name: next
 description: >
   Generate the next interview-prep coding task file in this repo (Man Group /
   AHL Quant Developer pair-programming prep), following the numbered
-  N_topic convention established in this repo — in BOTH python/ and c++/, as
-  a matched pair. Use this whenever the user asks for "the next task", "next
-  question", says they've finished a problem and want another, or invokes
-  "/next" (optionally with a topic override, e.g. "/next heaps"). Progresses
-  gradually through a DS&A + NumPy/Pandas roadmap rather than jumping
-  straight to hard problems.
+  N_topic convention established in this repo, in python/. Use this whenever
+  the user asks for "the next task", "next question", says they've finished
+  a problem and want another, or invokes "/next" (optionally with a topic
+  override, e.g. "/next heaps"). Progresses gradually through a DS&A +
+  NumPy/Pandas roadmap rather than jumping straight to hard problems.
 ---
 
 # next
 
 Generate the next practice-interview task, in the same format as the
 existing numbered files, and hand it back for the user to solve — you write
-the task, they write the solution, you review later. Write it **twice**:
-once as `python/1_core/N_topic.py`, once as `c++/1_core/N_topic.cpp` (same
-number, same topic, same Task/Hint/Tests, translated into each language's
-idiom) — see Step 6 for the C++ side.
+the task, they write the solution, you review later. Write it as
+`python/1_core/N_topic.py`. This repo is Python-only — there used to be a
+mirrored `c++/` tree, but it was deleted; don't create or reference C++
+files.
 
 This repo is organized into topic subfolders (`2_ds/`, `3_algo/`, `numpy/`,
 `scipy/`, `pandas/`, each numbered independently from 1) plus a `1_core/`
@@ -57,14 +56,8 @@ insert, so you don't pair an element with itself").
 ## Step 1 — Find the next file number
 
 List files in `python/1_core/` matching `[0-9]*_*.py` and take the highest
-leading integer `N`. The new files are `python/1_core/(N+1)_<topic_slug>.py`
-and `c++/1_core/(N+1)_<topic_slug>.cpp` — same number, same slug, both
-folders. If none exist, start at `1`. (`python/1_core/` is the source of
-truth for numbering — the topic subfolders each have their own independent
-numbering that this skill never touches; if `c++/1_core/` is ever missing a
-number `python/1_core/` has — e.g. because it was created before this skill
-wrote both languages — that's a gap to backfill via `solve`, not something
-this skill needs to reconcile.)
+leading integer `N`. The new file is `python/1_core/(N+1)_<topic_slug>.py`.
+If none exist, start at `1`.
 
 ## Step 2 — Pick the next topic
 
@@ -94,17 +87,16 @@ this is a guide, not a hard contract):
 8. NumPy/Pandas: vectorization vs. explicit loops, `.rolling()`, `.groupby()`
 9. Design/code-review flavored (LRU cache, simplified order book) — this
    one may want a stub `class Solution:` rather than a bare function
+10. Functional programming (`functools.reduce`/`partial`, `itertools`,
+    closures, generators as lazy sequences)
+11. OOP (inheritance/polymorphism, dunder methods, `@property`,
+    `@classmethod`, `abc.ABC` interfaces)
+12. Python-specific language features (generators/`yield`, decorators,
+    context managers) and stdlib depth (`itertools.groupby`, `dataclasses`,
+    `concurrent.futures`, etc.)
 
 Once you reach the end of the roadmap, either loop back for a harder
 variant of an earlier category, or ask the user what they want next.
-
-Item 8 (NumPy/Pandas) is Python-specific — vectorization there is a
-comparison against Python loop overhead that doesn't exist in C++ the same
-way. When you land on that topic, write the Python file as normal but pick
-the nearest C++-meaningful equivalent for the `c++/1_core/` file instead of a
-literal translation (e.g. a raw-loop-vs-`std::transform`/`<algorithm>`
-vectorization angle) rather than skipping the C++ file — flag this
-substitution when you report back.
 
 ## Step 3 — Write a Theory primer
 
@@ -280,99 +272,15 @@ coverage. E.g. `print(two_sum_ugly([2, 7, 11, 15], 9))` for a two-arg
 function, one such line per case. If the task only has one solution
 function (no ugly/optimized split), print that one function instead.
 
-## Step 6 — Write the C++ counterpart
+## Step 6 — Verify it compiles
 
-Write `c++/1_core/(N+1)_<topic_slug>.cpp` — the same Theory, Task, Test1-3,
-and Hint as the Python file, translated into C++ comment syntax (`//`
-instead of `##`), plus a `// Headers & STL components:` section in place
-of `# Packages:` (same idea — a broad list of relevant `<...>` headers and
-STL components for this category of problem, not just the two the Hint
-names; see `c++/1_core/3_two_sum.cpp` or `c++/1_core/6_search_range.cpp` for
-concrete examples of the section and its tone).
-
-```cpp
-// Theory:
-// <same ~100 words as the Python file>
-
-// Headers & STL components:
-// <broad list, one per line, e.g. "<unordered_map> - hash map, average O(1) lookup/insert/delete">
-
-// Task:
-// <same problem statement as the Python file, adapted to C++ types where
-// relevant, e.g. "vector<int>" instead of "list">
-// Test1: Inputs: <args>   Outputs: <expected>
-// Test2: Inputs: <args>   Outputs: <expected>
-// Test3: Inputs: <args>   Outputs: <expected>
-// Hint:
-// Ugly way: <tool name + dash-clause>
-// Right way: <tool name + dash-clause>
-
-// Solutions:
-#include <cassert>
-#include <iostream>
-// <other headers needed by the stubs' signatures, e.g. <vector>, <string>>
-
-// Space - Time Complexity analysis:
-// space:
-// time:
-
-<return_type> <function_name>_ugly(<params>) {
-    // TODO: implement
-    return <placeholder default of the right type, e.g. 0, false, {}>;
-}
-
-// Space - Time Complexity analysis:
-// space:
-// time:
-
-<return_type> <function_name>(<params>) {
-    return <function_name>_ugly(<params>);
-}
-
-// Tests:
-void validate() {
-    <the same cases as the Python file's validate(), via assert>
-    std::cout << "SUCCESS" << std::endl;
-}
-
-int main() {
-    validate();
-    return 0;
-}
-```
-
-C++ has no direct equivalent of `pass`, so the stub body returns a
-placeholder default of the correct type (`0`, `false`, `{}`, `""`, etc.)
-instead — `validate()`'s asserts will fail cleanly against that
-placeholder, the same way Python's asserts fail against a stub that
-returns `None`. Leave `## space:`/`## time:` blank here too, same
-reasoning as the Python file. Match function names 1:1 with the Python
-file's (`two_sum_ugly`, `two_sum`, etc.) so the two languages stay easy to
-compare side by side.
-
-Since the `_ugly` stub's body doesn't touch its parameters yet, `-Wall
--Wextra` will flag them as unused — mark each parameter
-`[[maybe_unused]]` in the stub's signature (e.g.
-`std::vector<double> rolling_average_ugly([[maybe_unused]] const std::vector<double>& prices, [[maybe_unused]] int w)`)
-so Step 7's clean-compile check actually passes. Drop `[[maybe_unused]]`
-naturally once the body is filled in and the parameter is actually used —
-that's the user's job when they solve it, not something to pre-empt here.
-
-## Step 7 — Verify both compile
-
-Python: run `python3 -m py_compile <new_python_file>` — expected to fail
+Run `python3 -m py_compile <new_python_file>` — expected to fail
 `validate()` at this point (unimplemented `pass`), that's fine, it must
 not have a `SyntaxError`.
 
-C++: run `g++ -std=c++20 -Wall -Wextra <new_cpp_file> -o /tmp/<name>` —
-must compile cleanly with no warnings. Don't run the resulting binary as a
-pass/fail check (it's expected to fail its own asserts, same as the
-Python side) — compiling cleanly is the bar here, matching Step 5's
-`py_compile` check.
+## Step 7 — Report back
 
-## Step 8 — Report back
-
-Tell the user: which two files were created, a one-line description of
-the task, and a one-line reason it's next in the progression (e.g. "first
-sliding window problem, natural follow-up to the hashing pattern from
-two-sum"). Keep it brief — the files themselves are the deliverable.
+Tell the user: which file was created, a one-line description of the task,
+and a one-line reason it's next in the progression (e.g. "first sliding
+window problem, natural follow-up to the hashing pattern from two-sum").
+Keep it brief — the file itself is the deliverable.

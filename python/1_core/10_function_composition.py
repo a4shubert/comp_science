@@ -37,22 +37,29 @@
 ## hand-written accumulator loop.
 
 
+import functools
+
+
 # Solutions:
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(k) - the returned closure only holds a reference to funcs (length k), no copy is made
+## time: O(k) - each call to the composed function walks reversed(funcs) once
 
 def compose_ugly(funcs):
-    pass
+    def composed(x):  # O(1) | O(1)
+        for f in reversed(funcs):  # O(1) | O(k)
+            x = f(x)  # O(1) | O(1)
+        return x  # O(1) | O(1)
+    return composed  # O(1) | O(1)
 
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(k) - functools.reduce builds a chain of k nested closures, one per function composed
+## time: O(k) - building the chain takes k reduce steps; invoking the result on one input is k nested calls
 
 def compose(funcs):
-    return compose_ugly(funcs)
+    return functools.reduce(lambda f, g: lambda x: f(g(x)), funcs, lambda x: x)  # O(k) | O(k)
 
 
 # Tests:
@@ -73,8 +80,4 @@ def validate():
 
 
 if __name__ == "__main__":
-    # validate()
-    print(compose_ugly([lambda x: x + 1, lambda x: x * 2])(3))
-    print(compose_ugly([str])(5))
-    print(compose_ugly([])(10))
-    print(compose_ugly([lambda x: x - 1, lambda x: x - 1, lambda x: x - 1])(10))
+    validate()

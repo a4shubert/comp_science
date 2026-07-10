@@ -33,22 +33,27 @@
 ## `lambda acc, f: f(acc)` as the combining function.
 
 
+import functools
+
+
 # Solutions:
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(1) - only the accumulator variable is held, no extra structure grows with input
+## time: O(k) - one call per function in funcs
 
 def pipe_ugly(value, funcs):
-    pass
+    for f in funcs:  # O(1) | O(k)
+        value = f(value)  # O(1) | O(1)
+    return value  # O(1) | O(1)
 
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(1) - functools.reduce folds to a single accumulated value, no intermediate results kept
+## time: O(k) - one call per function in funcs, same as the ugly loop
 
 def pipe(value, funcs):
-    return pipe_ugly(value, funcs)
+    return functools.reduce(lambda acc, f: f(acc), funcs, value)  # O(k) | O(k)
 
 
 # Tests:
@@ -69,8 +74,4 @@ def validate():
 
 
 if __name__ == "__main__":
-    # validate()
-    print(pipe_ugly(3, [lambda x: x + 1, lambda x: x * 2]))
-    print(pipe_ugly("hello", [str.upper, lambda s: s[::-1]]))
-    print(pipe_ugly(5, []))
-    print(pipe_ugly(10, [lambda x: x - 1, lambda x: x - 1, lambda x: x - 1]))
+    validate()

@@ -2,37 +2,34 @@
 name: solve
 description: >
   Write a complete, correct solution for a specific numbered interview-prep
-  task, in BOTH Python and C++ where applicable, e.g. "solve 6" (searches
-  all topic folders) or "solve 2_ds/3" (folder-qualified, unambiguous)
-  implements the matching python/<folder>/N_whatever.py AND
-  c++/<folder>/N_whatever.cpp properly. Use this whenever the user says
+  task, in Python, e.g. "solve 6" (searches all topic folders) or "solve
+  2_ds/3" (folder-qualified, unambiguous) implements the matching
+  python/<folder>/N_whatever.py properly. Use this whenever the user says
   "solve <number>" or "solve <folder>/<number>", asks you to
   implement/fix/finish a specific numbered task, or wants you to write the
   answer yourself rather than write it themselves. Fills in the Solutions,
   per-line space|time comments, a Space - Time Complexity analysis block
   above each function, and tests - to the same standard used throughout
-  this repo (see python/1_core/1_factorial.py, python/1_core/3_two_sum.py,
-  c++/1_core/3_two_sum.cpp).
+  this repo (see python/1_core/1_factorial.py, python/1_core/3_two_sum.py).
 ---
 
 # solve
 
 Write the real solution for the task the user names — not a hint, not a
-stub, the actual working implementation in **both** the Python file and
-(where applicable) its C++ counterpart, commented the way every other
+stub, the actual working implementation, commented the way every other
 solved file in this repo is commented. This is the opposite mode from
 normal practice (where the user writes and you review/grade) — here
 they're explicitly asking you to do the writing.
 
-This repo is split into topic folders: `python/1_core/`, `python/2_ds/`,
-`python/3_algo/`, `python/numpy/`, `python/scipy/`, `python/pandas/`, and
-mirrored as `c++/1_core/`, `c++/2_ds/`, `c++/3_algo/` (numpy/scipy/pandas have
-no C++ side — those libraries are Python-specific). Each folder numbers
-its own files independently starting from 1, so a bare number like
-`solve 3` is ambiguous — it could match `1_core/3`, `2_ds/3`, `3_algo/3`,
-`numpy/3`, `scipy/3`, or `pandas/3` all at once.
+This repo is Python-only (there used to be a mirrored `c++/` tree, but it
+was deleted — don't create or reference C++ files). It's split into topic
+folders: `python/1_core/`, `python/2_ds/`, `python/3_algo/`,
+`python/numpy/`, `python/scipy/`, `python/pandas/`. Each folder numbers its
+own files independently starting from 1, so a bare number like `solve 3` is
+ambiguous — it could match `1_core/3`, `2_ds/3`, `3_algo/3`, `numpy/3`,
+`scipy/3`, or `pandas/3` all at once.
 
-## Step 1 — Locate the files and read the task
+## Step 1 — Locate the file and read the task
 
 If the user gave a folder-qualified argument (`2_ds/3`, `2_ds 3`, `numpy/2`,
 etc.), go straight to `python/<folder>/<number>_*.py`. Otherwise, search
@@ -53,39 +50,23 @@ one.
 The optimized function **must actually call** whatever tool the "Right
 way:" line names — `numpy.cumsum`, `bisect_left`, `heapq`, `pandas.merge`,
 whatever it says — not a hand-rolled reimplementation of the same idea in
-plain Python/C++. If the Hint says "Right way: numpy.cumsum" and the
-function is a hand-written prefix-sum loop instead, that's not solved
-correctly, even if it's O(n) and passes the tests — the whole point of the
-optimized version is demonstrating the library call, not just hitting the
-right complexity by coincidence. This matters most for the numpy/scipy/
+plain Python. If the Hint says "Right way: numpy.cumsum" and the function
+is a hand-written prefix-sum loop instead, that's not solved correctly,
+even if it's O(n) and passes the tests — the whole point of the optimized
+version is demonstrating the library call, not just hitting the right
+complexity by coincidence. This matters most for the numpy/scipy/
 pandas-flavored tasks, where "the right way" specifically means the
 vectorized library call, not a fast-but-manual Python equivalent. (numpy,
 scipy, and pandas may not be installed in this environment — if imports
-fail when verifying in Step 6, install them, e.g. via a venv, rather than
-falling back to a pure-Python reimplementation to dodge the missing
-dependency.)
+fail when verifying in Step 5, install them into the repo's `.venv` (see
+`requirements.txt`) rather than falling back to a pure-Python
+reimplementation to dodge the missing dependency.)
 
-If the task is in `numpy/`, `scipy/`, or `pandas/`, there is no C++ side —
-skip straight to Step 4 after Steps 2-3, there's no Step 5 for these.
-
-Otherwise, check for the matching `c++/<same-folder>/<number>_*.cpp`. If
-it exists, solve it too (Step 5). If it doesn't exist yet (e.g. the number
-predates this skill writing both languages), create it first — mirror the
-Python file's Theory/Task/Hint/Tests, translated to C++ comment syntax
-with a `// Headers & STL components:` section in place of `# Packages:`
-(see the `next` skill's Step 6 for the exact template) — then solve it the
-same as if it already existed.
-
-If either file already has a partial/buggy attempt in it, you don't need
-to preserve its structure — write it properly, the way you would in a
-review where you'd flag it as needing a real fix rather than a patch.
-Don't leave dead code, shadowed builtins/names, or unhandled edge cases
-(e.g. empty input, input with no valid answer) that a live interviewer
-would flag.
-
-The rest of this skill is organized in two halves: Steps 2-4 are Python,
-Step 5 is the C++ equivalent of all three (skip it for numpy/scipy/
-pandas), Step 6 verifies everything solved, Step 7 reports back.
+If the file already has a partial/buggy attempt in it, you don't need to
+preserve its structure — write it properly, the way you would in a review
+where you'd flag it as needing a real fix rather than a patch. Don't leave
+dead code, shadowed builtins/names, or unhandled edge cases (e.g. empty
+input, input with no valid answer) that a live interviewer would flag.
 
 ## Step 2 — Comment every line with space | time complexity
 
@@ -217,57 +198,10 @@ in-progress workflow for *their* unfinished attempts (see the `next`
 skill); once `solve` hands back a finished file, that scaffolding is
 gone — `validate()` passing is the only signal needed.
 
-## Step 5 — Do the same for C++
+## Step 5 — Verify
 
-Same standards as Steps 2-4, translated:
-
-- **Per-line comments**: `// O(space) | O(time)`, bare, no parenthetical —
-  same reasoning rules as Step 2 (recursive calls get the function's
-  overall contribution; `std::deque` is O(1) at both ends, `std::vector`
-  is O(1) at the back but O(n) at the front; slicing/copying containers
-  costs O(k); a line that grows a container across iterations gets the
-  cumulative worst-case size as its space mark). In the optimized
-  function only, also add a `//` line above each statement describing
-  what it does — same rule as Step 2's Python example, `//` instead of
-  `#`, `_ugly` gets the trailing complexity comment only.
-- **Complexity block**: `// Space - Time Complexity analysis:` directly
-  above each function, with `// space:`/`// time:` lines and a mandatory
-  one-sentence reason on both — same as Step 3, `//` instead of `#`.
-- **Tests**: fill in `void validate()` with `assert(...)` per case (same
-  coverage as the Python file's `validate()`, plus the same edge cases),
-  ending with `std::cout << "SUCCESS" << std::endl;`. `main()` should
-  contain only `validate(); return 0;` — no debug output, matching the
-  Python side's Step 4 rule.
-
-```cpp
-// Space - Time Complexity analysis:
-// space: O(n) - dict can grow to hold up to n entries
-// time: O(n) - single pass, O(1) average unordered_map lookup/insert
-
-std::vector<int> two_sum(const std::vector<int>& nums, int target) {
-    ...
-}
-
-// Tests:
-void validate() {
-    ...
-    std::cout << "SUCCESS" << std::endl;
-}
-
-int main() {
-    validate();
-    return 0;
-}
-```
-
-Keep function names identical to the Python file's (`two_sum_ugly`,
-`two_sum`, etc.) so the two languages read as direct translations of each
-other, not divergent implementations.
-
-## Step 6 — Verify both
-
-Python — these filenames start with a digit and can't be imported
-normally, load by path and call `validate()` directly:
+These filenames start with a digit and can't be imported normally, load
+by path and call `validate()` directly:
 
 ```python
 import importlib.util
@@ -277,19 +211,12 @@ spec.loader.exec_module(mod)
 mod.validate()
 ```
 
-C++ — compile with warnings on and run the binary:
+Must print `SUCCESS`. If it doesn't, fix the actual bug before reporting
+back — don't hand over something that fails its own tests.
 
-```bash
-g++ -std=c++20 -Wall -Wextra c++/<folder>/<number>_whatever.cpp -o /tmp/<name> && /tmp/<name>
-```
+## Step 6 — Report back
 
-Both must print `SUCCESS`, and the C++ compile must produce no warnings.
-If either doesn't, fix the actual bug before reporting back — don't hand
-over something that fails its own tests.
-
-## Step 7 — Report back
-
-Briefly: which two files, which function(s) written in each, and their
-complexities. State them as plain facts, not as fixes or corrections to
-what was there before — no "was wrong, now it's...", just what it is.
-Keep it to a few lines — the files are the deliverable.
+Briefly: which file, which function(s) written, and their complexities.
+State them as plain facts, not as fixes or corrections to what was there
+before — no "was wrong, now it's...", just what it is. Keep it to a few
+lines — the file is the deliverable.

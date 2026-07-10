@@ -36,6 +36,7 @@
 
 
 import time
+from concurrent.futures import ThreadPoolExecutor
 
 
 def fetch(item):
@@ -46,19 +47,23 @@ def fetch(item):
 # Solutions:
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(n) - result list holds one entry per item
+## time: O(n) - n sequential fetch calls; wall-clock is the sum of every call's wait, not just asymptotic op count
 
 def fetch_all_ugly(items):
-    pass
+    results = []  # O(1) | O(1)
+    for item in items:  # O(1) | O(n)
+        results.append(fetch(item))  # O(n) | O(1) work + blocking wait per call
+    return results  # O(1) | O(1)
 
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(n) - the thread pool holds up to n in-flight tasks, and the result list holds one entry per item
+## time: O(n) op count, same as the ugly version - the win is wall-clock (~max single-call wait instead of the sum), not asymptotic complexity
 
 def fetch_all(items):
-    return fetch_all_ugly(items)
+    with ThreadPoolExecutor(max_workers=max(1, len(items))) as executor:  # O(n) | O(1)
+        return list(executor.map(fetch, items))  # O(n) | O(n) op count, concurrently overlapped
 
 
 # Tests:
@@ -78,7 +83,4 @@ def validate():
 
 
 if __name__ == "__main__":
-    # validate()
-    print(fetch_all_ugly([1, 2, 3, 4, 5]))
-    print(fetch_all_ugly([]))
-    print(fetch_all_ugly([10]))
+    validate()

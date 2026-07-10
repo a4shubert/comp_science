@@ -32,33 +32,33 @@
 ## v1 == v2 work directly.
 
 
+# Solutions:
+
+# Space - Time Complexity analysis:
+## space: O(1) - a fixed-size tuple, independent of anything else in the program
+## time: O(1) - two additions, no scaling factor
+
+def add_vectors_ugly(v1, v2):
+    return (v1[0] + v2[0], v1[1] + v2[1])  # O(1) | O(1)
+
+
 class Vector2D:
     def __init__(self, x, y):
         self.x = x
         self.y = y
 
+    # Space - Time Complexity analysis:
+    ## space: O(1) - one new Vector2D instance, independent of anything else in the program
+    ## time: O(1) - two additions, no scaling factor
+
     def __add__(self, other):
-        pass
+        return Vector2D(self.x + other.x, self.y + other.y)  # O(1) | O(1)
 
     def __eq__(self, other):
-        pass
+        return isinstance(other, Vector2D) and self.x == other.x and self.y == other.y
 
     def __repr__(self):
-        pass
-
-
-def add_vectors_ugly(v1, v2):
-    pass
-
-
-# Solutions:
-
-# Space - Time Complexity analysis:
-## space:
-## time:
-
-def add_vectors(v1, v2):
-    return Vector2D(*add_vectors_ugly((v1.x, v1.y), (v2.x, v2.y)))
+        return f"Vector2D({self.x}, {self.y})"
 
 
 # Tests:
@@ -76,11 +76,9 @@ def validate():
         )
         result = v1 + v2
         assert result == expected, f"{v1!r} + {v2!r}: expected {expected!r}, got {result!r}"
+    assert repr(Vector2D(1, 2)) == "Vector2D(1, 2)"
     print("SUCCESS")
 
 
 if __name__ == "__main__":
-    # validate()
-    print(add_vectors_ugly((1, 2), (3, 4)))
-    print(add_vectors_ugly((0, 0), (-1, -1)))
-    print(add_vectors_ugly((2, 3), (2, 3)))
+    validate()

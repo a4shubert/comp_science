@@ -36,15 +36,22 @@
 from dataclasses import dataclass
 
 
+# Solutions:
+
+# Space - Time Complexity analysis:
+## space: O(1) - two int fields, independent of anything else in the program
+## time: O(1) - one comparison per field
+
 class PointUgly:
     def __init__(self, x, y):
-        pass
+        self.x = x  # O(1) | O(1)
+        self.y = y  # O(1) | O(1)
 
     def __eq__(self, other):
-        pass
+        return isinstance(other, PointUgly) and self.x == other.x and self.y == other.y  # O(1) | O(1)
 
     def __repr__(self):
-        pass
+        return f"PointUgly(x={self.x}, y={self.y})"  # O(1) | O(1)
 
 
 @dataclass
@@ -52,12 +59,6 @@ class PointRight:
     x: int
     y: int
 
-
-# Solutions:
-
-# Space - Time Complexity analysis:
-## space:
-## time:
 
 def points_equal_ugly(p1, p2):
     return p1 == p2
@@ -74,8 +75,4 @@ def validate():
 
 
 if __name__ == "__main__":
-    # validate()
-    print(points_equal_ugly(PointUgly(1, 2), PointUgly(1, 2)))
-    print(points_equal_ugly(PointUgly(1, 2), PointUgly(1, 3)))
-    print(PointRight(1, 2) == PointRight(1, 2))
-    print(repr(PointRight(1, 2)))
+    validate()

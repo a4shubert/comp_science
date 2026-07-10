@@ -49,7 +49,7 @@ class Circle(Shape):
         self.radius = radius
 
     def area(self):
-        pass
+        return math.pi * self.radius ** 2
 
 
 class Rectangle(Shape):
@@ -58,25 +58,31 @@ class Rectangle(Shape):
         self.height = height
 
     def area(self):
-        pass
+        return self.width * self.height
 
 
 # Solutions:
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(1) - a single running total, no extra structure grows with input
+## time: O(n) - one isinstance check and one area formula per shape
 
 def total_area_ugly(shapes):
-    pass
+    total = 0  # O(1) | O(1)
+    for s in shapes:  # O(1) | O(n)
+        if isinstance(s, Circle):  # O(1) | O(1)
+            total += math.pi * s.radius ** 2  # O(1) | O(1)
+        elif isinstance(s, Rectangle):  # O(1) | O(1)
+            total += s.width * s.height  # O(1) | O(1)
+    return total  # O(1) | O(1)
 
 
 # Space - Time Complexity analysis:
-## space:
-## time:
+## space: O(1) - sum() accumulates a single running total, the generator holds no history
+## time: O(n) - one polymorphic area() call per shape, no branching on type
 
 def total_area(shapes):
-    return total_area_ugly(shapes)
+    return sum(s.area() for s in shapes)  # O(1) | O(n)
 
 
 # Tests:
@@ -97,8 +103,4 @@ def validate():
 
 
 if __name__ == "__main__":
-    # validate()
-    print(total_area_ugly([Rectangle(2, 2), Rectangle(3, 3)]))
-    print(total_area_ugly([Circle(1)]))
-    print(total_area_ugly([]))
-    print(total_area_ugly([Circle(2), Rectangle(1, 1)]))
+    validate()
