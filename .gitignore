@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# C++
+*.o
+*.obj
+*.out
+a.out
+*.dSYM/
+
+# OS
+.DS_Store
+
+# Claude Code local, machine-specific settings (not shared)
+.claude/settings.local.json
