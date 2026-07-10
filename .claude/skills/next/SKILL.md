@@ -16,13 +16,13 @@ description: >
 Generate the next practice-interview task, in the same format as the
 existing numbered files, and hand it back for the user to solve — you write
 the task, they write the solution, you review later. Write it **twice**:
-once as `python/core/N_topic.py`, once as `c++/core/N_topic.cpp` (same
+once as `python/1_core/N_topic.py`, once as `c++/1_core/N_topic.cpp` (same
 number, same topic, same Task/Hint/Tests, translated into each language's
 idiom) — see Step 6 for the C++ side.
 
-This repo is organized into topic subfolders (`ds/`, `algo/`, `numpy/`,
-`scipy/`, `pandas/`, each numbered independently from 1) plus a `core/`
-folder holding the original mixed warm-up sequence. `core/` is also where
+This repo is organized into topic subfolders (`2_ds/`, `3_algo/`, `numpy/`,
+`scipy/`, `pandas/`, each numbered independently from 1) plus a `1_core/`
+folder holding the original mixed warm-up sequence. `1_core/` is also where
 this skill always writes new files — it's the "not yet categorized" bucket;
 the user moves/renumbers files into the topic folders themselves as they
 go, so don't try to guess which topic folder a new task belongs in.
@@ -56,23 +56,25 @@ insert, so you don't pair an element with itself").
 
 ## Step 1 — Find the next file number
 
-List files in `python/core/` matching `[0-9]*_*.py` and take the highest
-leading integer `N`. The new files are `python/core/(N+1)_<topic_slug>.py`
-and `c++/core/(N+1)_<topic_slug>.cpp` — same number, same slug, both
-folders. If none exist, start at `1`. (`python/core/` is the source of
+List files in `python/1_core/` matching `[0-9]*_*.py` and take the highest
+leading integer `N`. The new files are `python/1_core/(N+1)_<topic_slug>.py`
+and `c++/1_core/(N+1)_<topic_slug>.cpp` — same number, same slug, both
+folders. If none exist, start at `1`. (`python/1_core/` is the source of
 truth for numbering — the topic subfolders each have their own independent
-numbering that this skill never touches;
-if `c++/` is ever missing a number `python/` has — e.g. because it was
-created before this skill wrote both languages — that's a gap to backfill
-via `solve`, not something this skill needs to reconcile.)
+numbering that this skill never touches; if `c++/1_core/` is ever missing a
+number `python/1_core/` has — e.g. because it was created before this skill
+wrote both languages — that's a gap to backfill via `solve`, not something
+this skill needs to reconcile.)
 
 ## Step 2 — Pick the next topic
 
 If the user gave an explicit topic (e.g. `/next heaps`), use that.
 
-Otherwise, read the `# Task:` header of each existing numbered file to see
-which topics from the roadmap below are already covered, and pick the next
-uncovered one in order. Progress gradually — don't jump to a hard topic
+Otherwise, read the `# Task:` header of each existing numbered file in
+`python/1_core/` (plus `2_ds/`, `3_algo/`, `numpy/`, `scipy/`, `pandas/`, if the
+user has moved files into them by now) to see which topics from the
+roadmap below are already covered, and pick the next uncovered one in
+order. Progress gradually — don't jump to a hard topic
 just because it's next on the list if the last couple of problems were
 trivial for the user; use your judgment from how the review conversation
 went (if you have that context), but default to roadmap order.
@@ -99,7 +101,7 @@ variant of an earlier category, or ask the user what they want next.
 Item 8 (NumPy/Pandas) is Python-specific — vectorization there is a
 comparison against Python loop overhead that doesn't exist in C++ the same
 way. When you land on that topic, write the Python file as normal but pick
-the nearest C++-meaningful equivalent for the `c++/` file instead of a
+the nearest C++-meaningful equivalent for the `c++/1_core/` file instead of a
 literal translation (e.g. a raw-loop-vs-`std::transform`/`<algorithm>`
 vectorization angle) rather than skipping the C++ file — flag this
 substitution when you report back.
@@ -114,7 +116,7 @@ in (e.g. what a heap is and why it's O(log n), what makes hash maps O(1)
 average, why sliding window is O(n) instead of O(n^2)/O(n^3)). This is the
 "why does this tool exist and what's the tradeoff" context; the Hint
 section further down stays specific to this problem. See
-`8_kth_largest.py`'s Theory section for a concrete example of the length
+`1_core/8_kth_largest.py`'s Theory section for a concrete example of the length
 and tone to match.
 
 ## Step 4 — List relevant Packages
@@ -147,8 +149,8 @@ two).
 
 ## Step 5 — Write the file
 
-Use this exact structure (matches `1_factorial.py`, `2_fibonacci.py`,
-`3_two_sum.py` in this repo — read one of them if you want a concrete
+Use this exact structure (matches `1_core/1_factorial.py`, `1_core/2_fibonacci.py`,
+`1_core/3_two_sum.py` in this repo — read one of them if you want a concrete
 reference):
 
 ```python
@@ -208,11 +210,11 @@ separately — one source of truth for what "correct" means on this task.
 Stub **both** functions from the start whenever the hint names two
 approaches (an "Ugly way" and a "Right way") — `<function_name>_ugly` for
 the brute-force tool, `<function_name>` for the optimized one — matching
-the naming already used in `3_two_sum.py` and `5_valid_parentheses.py`.
+the naming already used in `1_core/3_two_sum.py` and `1_core/5_valid_parentheses.py`.
 Only stub a single function if the hint genuinely only names one approach.
 
 The optimized function's stub body delegates to the `_ugly` one instead of
-`pass` (matching `7_climbing_stairs.py`) — that way, once the user finishes
+`pass` (matching `1_core/7_climbing_stairs.py`) — that way, once the user finishes
 just the brute-force version, `validate()`'s loop over both functions
 already passes end to end, since the optimized one is temporarily just
 forwarding to the working one. They replace the delegating body with the
@@ -225,7 +227,7 @@ after it before the first function — and each function's
 `# Space - Time Complexity analysis:` block goes *above* that function,
 not below it, so the complexity is the first thing read before the code
 that produces it. Leave the `## space:` / `## time:` lines blank (matching
-`7_climbing_stairs.py`) — this is the user's own analysis to write, not
+`1_core/7_climbing_stairs.py`) — this is the user's own analysis to write, not
 yours to fill in when generating the task.
 
 (If the task is naturally class-shaped — e.g. an LRU cache or order book —
@@ -256,7 +258,7 @@ if __name__ == "__main__":
 ```
 
 Wire `validate()` to loop over both stubs from the start (same shape as
-`3_two_sum.py`/`5_valid_parentheses.py`'s `for fn in (..._ugly, ...):`
+`1_core/3_two_sum.py`/`1_core/5_valid_parentheses.py`'s `for fn in (..._ugly, ...):`
 loop). It'll fail until `_ugly` is actually implemented (the optimized
 one just delegates to it, so both fail together, then both pass together
 once `_ugly` is done) — expected, same as any unsolved file failing
@@ -280,13 +282,13 @@ function (no ugly/optimized split), print that one function instead.
 
 ## Step 6 — Write the C++ counterpart
 
-Write `c++/(N+1)_<topic_slug>.cpp` — the same Theory, Task, Test1-3, and
-Hint as the Python file, translated into C++ comment syntax (`//` instead
-of `##`), plus a `// Headers & STL components:` section in place of
-`# Packages:` (same idea — a broad list of relevant `<...>` headers and
+Write `c++/1_core/(N+1)_<topic_slug>.cpp` — the same Theory, Task, Test1-3,
+and Hint as the Python file, translated into C++ comment syntax (`//`
+instead of `##`), plus a `// Headers & STL components:` section in place
+of `# Packages:` (same idea — a broad list of relevant `<...>` headers and
 STL components for this category of problem, not just the two the Hint
-names; see `c++/3_two_sum.cpp` or `c++/6_search_range.cpp` for concrete
-examples of the section and its tone).
+names; see `c++/1_core/3_two_sum.cpp` or `c++/1_core/6_search_range.cpp` for
+concrete examples of the section and its tone).
 
 ```cpp
 // Theory:

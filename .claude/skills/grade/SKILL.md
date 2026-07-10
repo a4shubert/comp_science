@@ -2,12 +2,15 @@
 name: grade
 description: >
   Grade/review a specific numbered interview-prep task file in this repo,
-  e.g. "grade 4" or "/grade 4" reviews 4_longest_substring.py. Use this
-  whenever the user says "grade <number>", "review <number>", or asks you
-  to check/grade a specific numbered task file by its number. Runs the
-  file's tests, checks the complexity analysis against the real
-  implementation, and reviews code quality — same standard as manual
-  reviews done elsewhere in this session, just triggered by number.
+  e.g. "grade 4" (searches all topic folders) or "grade 2_ds/3"
+  (folder-qualified, unambiguous). Use this whenever the user says "grade
+  <number>", "grade <folder>/<number>", "review <number>", or asks you to
+  check/grade a specific numbered task file. Runs the file's tests, checks
+  the complexity analysis against the real implementation, checks whether
+  the optimized function actually uses the hinted library tool (not a
+  hand-rolled reimplementation), and reviews code quality — same standard
+  as manual reviews done elsewhere in this session, just triggered by
+  number.
 ---
 
 # grade
@@ -19,12 +22,20 @@ implementation, and flag code-quality issues. Don't rewrite their solution
 for them — this is a review, not a fix, unless they separately ask you to
 patch something.
 
+This skill is Python-only (this repo's `c++/` side is handled by `solve`,
+not reviewed here). The repo is split into topic folders — `python/1_core/`,
+`python/2_ds/`, `python/3_algo/`, `python/numpy/`, `python/scipy/`,
+`python/pandas/` — each numbered independently from 1, so a bare number is
+ambiguous.
+
 ## Step 1 — Locate the file
 
-Find the file in `python/` (this repo also has a sibling `c++/` folder for
-the same practice in C++ — this skill is Python-only, don't touch `c++/`)
-matching `<number>_*.py`. If none match, or more than one does, say so and
-ask which file they mean rather than guessing.
+If the user gave a folder-qualified argument (`2_ds/3`, `2_ds 3`, etc.), go
+straight to `python/<folder>/<number>_*.py`. Otherwise, search
+`python/1_core/`, `python/2_ds/`, `python/3_algo/`, `python/numpy/`,
+`python/scipy/`, `python/pandas/` for a file matching `<number>_*.py`. If
+it matches in exactly one folder, proceed. If it matches in more than one,
+list the matches and ask which one they mean rather than guessing.
 
 ## Step 2 — Run it for correctness
 
@@ -37,11 +48,15 @@ instead:
 
 ```python
 import importlib.util
-spec = importlib.util.spec_from_file_location("task", "python/<number>_whatever.py")
+spec = importlib.util.spec_from_file_location("task", "python/<folder>/<number>_whatever.py")
 mod = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(mod)
 mod.validate()
 ```
+
+For `numpy/`/`scipy`/`pandas/` tasks, those packages may not be installed
+in this environment — if the import itself fails, install them (e.g. via a
+venv) before concluding the solution is broken.
 
 - If it prints `SUCCESS` cleanly: correctness passes.
 - If an `assert` fails: report which specific case failed and what the
@@ -75,8 +90,10 @@ Look for things like:
 - Leftover debug prints or commented-out dead code
 - Inconsistent edge-case handling between sibling functions (e.g. one
   variant guards against negative input, another doesn't)
-- Whether the task's hinted tools (from the "Ugly way:" / "Right way:"
-  hint) were actually the ones used
+- Whether the optimized function actually calls the tool the "Right way:"
+  hint names (e.g. `numpy.cumsum`, `heapq`, `bisect_left`) — a hand-rolled
+  reimplementation that happens to hit the same complexity is still a red
+  flag, not a pass; the point is demonstrating the library call
 - Unused imports or variables
 - Anything that would read as a red flag in a live pair-programming
   interview — mainly, does the code and its stated complexity together
