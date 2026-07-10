@@ -33,6 +33,8 @@
 
 
 # Solutions:
+import numpy as np
+
 
 # Space - Time Complexity analysis:
 ## space: O(n) - result list holds n-w+1 averages
@@ -47,21 +49,17 @@ def rolling_average_ugly(prices, w):
 
 
 # Space - Time Complexity analysis:
-## space: O(n) - the prefix-sum array and the result list both scale with n
-## time: O(n) - two separate linear passes: build prefix sums, then one O(1) subtraction per window
+## space: O(n) - the numpy array, prefix-sum array, and result all scale with n
+## time: O(n) - np.cumsum is a single vectorized pass; the window-sum subtraction is vectorized over all windows at once
 
 def rolling_average(prices, w):
-    # prefix[i] = sum of the first i prices; prefix[0] = 0
-    prefix = [0]  # O(1) | O(1)
-    # build the cumulative sums in one pass
-    for p in prices:  # O(1) | O(n)
-        prefix.append(prefix[-1] + p)  # O(n) | O(1)
-    result = []  # O(1) | O(1)
-    # each window's sum is just the difference of two prefix entries
-    for i in range(len(prices) - w + 1):  # O(1) | O(n)
-        window_sum = prefix[i + w] - prefix[i]  # O(1) | O(1)
-        result.append(window_sum / w)  # O(n) | O(1)
-    return result  # O(1) | O(1)
+    # numpy array so cumsum runs as a vectorized C loop, not a Python loop
+    arr = np.array(prices, dtype=float)  # O(n) | O(n)
+    # prefix[i] = sum of the first i prices; a leading 0 makes prefix[0] = 0
+    prefix = np.cumsum(np.insert(arr, 0, 0))  # O(n) | O(n)
+    # every window's sum at once: prefix[w:] - prefix[:-w], no explicit loop over windows
+    window_sums = prefix[w:] - prefix[:-w]  # O(n) | O(n)
+    return (window_sums / w).tolist()  # O(n) | O(n)
 
 
 # Tests:

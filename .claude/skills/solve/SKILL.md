@@ -31,6 +31,17 @@ the hint gives two, matching the pattern in `3_two_sum.py`
 (`is_valid_ugly` / `is_valid`) — the point of keeping both is comparing
 complexity, not just shipping the fast one.
 
+The optimized function **must actually call** whatever tool the "Right
+way:" line names — `numpy.cumsum`, `bisect_left`, `heapq`, `pandas.merge`,
+whatever it says — not a hand-rolled reimplementation of the same idea in
+plain Python/C++. If the Hint says "Right way: numpy.cumsum" and the
+function is a hand-written prefix-sum loop instead, that's not solved
+correctly, even if it's O(n) and passes the tests — the whole point of the
+optimized version is demonstrating the library call, not just hitting the
+right complexity by coincidence. This matters most for the numpy/scipy/
+pandas-flavored tasks, where "the right way" specifically means the
+vectorized library call, not a fast-but-manual Python equivalent.
+
 Then check for `c++/<number>_*.cpp`. If it exists, solve it too (Step 5).
 If it doesn't exist yet (e.g. the number predates this skill writing both
 languages), create it first — mirror the Python file's Theory/Task/Hint/

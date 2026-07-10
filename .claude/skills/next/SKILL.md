@@ -16,9 +16,16 @@ description: >
 Generate the next practice-interview task, in the same format as the
 existing numbered files, and hand it back for the user to solve — you write
 the task, they write the solution, you review later. Write it **twice**:
-once as `python/N_topic.py`, once as `c++/N_topic.cpp` (same number, same
-topic, same Task/Hint/Tests, translated into each language's idiom) — see
-Step 6 for the C++ side.
+once as `python/core/N_topic.py`, once as `c++/core/N_topic.cpp` (same
+number, same topic, same Task/Hint/Tests, translated into each language's
+idiom) — see Step 6 for the C++ side.
+
+This repo is organized into topic subfolders (`ds/`, `algo/`, `numpy/`,
+`scipy/`, `pandas/`, each numbered independently from 1) plus a `core/`
+folder holding the original mixed warm-up sequence. `core/` is also where
+this skill always writes new files — it's the "not yet categorized" bucket;
+the user moves/renumbers files into the topic folders themselves as they
+go, so don't try to guess which topic folder a new task belongs in.
 
 ## Why this format
 
@@ -49,10 +56,12 @@ insert, so you don't pair an element with itself").
 
 ## Step 1 — Find the next file number
 
-List files in `python/` matching `[0-9]*_*.py` and take the highest
-leading integer `N`. The new files are `python/(N+1)_<topic_slug>.py` and
-`c++/(N+1)_<topic_slug>.cpp` — same number, same slug, both folders. If
-none exist, start at `1`. (`python/` is the source of truth for numbering;
+List files in `python/core/` matching `[0-9]*_*.py` and take the highest
+leading integer `N`. The new files are `python/core/(N+1)_<topic_slug>.py`
+and `c++/core/(N+1)_<topic_slug>.cpp` — same number, same slug, both
+folders. If none exist, start at `1`. (`python/core/` is the source of
+truth for numbering — the topic subfolders each have their own independent
+numbering that this skill never touches;
 if `c++/` is ever missing a number `python/` has — e.g. because it was
 created before this skill wrote both languages — that's a gap to backfill
 via `solve`, not something this skill needs to reconcile.)
